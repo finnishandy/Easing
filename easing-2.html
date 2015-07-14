@@ -26,9 +26,16 @@
             left: 50px;
             top: 25px;
         }
+
+        #animationStatus { position: fixed; top: 0px; right: 0px; width: 200px; height: 500px; border: 1px solid black; padding: 20px; }
+        #animationStatus input { width: 100%; }
     </style>
 </head>
 <input type="button" name="start" id="startAnimation" value="Start Animation" />
+<div id="animationStatus">
+    <input type="text" id="fps"/>
+    <input type="text" id="progress"/>
+</div>
 <body>
 <div id="contentContainer">
     <img id="thing" alt="the thing" height="300" src="images/donut.png" width="300">
@@ -170,11 +177,16 @@
 
     var start = null;
     var element = theThing;
+    var fpsCounter;
+    var fpsEl = document.querySelector("#fps");
+    var progressEl = document.querySelector("#progress");
 
     function step(timestamp) {
+        fpsCounter++;
         if (!start) start = timestamp / 1000;
         var progress = (timestamp/ 1000) - start;
-
+        fpsEl.value = (fpsCounter);
+        progressEl.value = progress % 1;
         var x = Easing.easeOutElastic(progress, 0, 400, 4);
         console.log("x: " + x);
         //element.style.left = Math.pow(progress/100, 2) + "px";
@@ -190,7 +202,10 @@
 
     document.querySelector("#startAnimation").addEventListener("click", function(){
         start = null;
+        fpsCounter = 0;
         window.requestAnimationFrame(step);
+
+        //start different loop for calculating fps. Compare counter to previous hit and calculate average.
     });
 </script>
 
