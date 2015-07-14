@@ -28,7 +28,7 @@
         }
     </style>
 </head>
-
+<input type="button" name="start" id="startAnimation" value="Start Animation" />
 <body>
 <div id="contentContainer">
     <img id="thing" alt="the thing" height="300" src="images/donut.png" width="300">
@@ -172,19 +172,26 @@
     var element = theThing;
 
     function step(timestamp) {
-        if (!start) start = timestamp;
-        var progress = (timestamp - start) / 1000;
-        console.log("elapsed: " + progress);
+        if (!start) start = timestamp / 1000;
+        var progress = (timestamp/ 1000) - start;
+
+        var x = Easing.easeOutElastic(progress, 0, 400, 4);
+        console.log("x: " + x);
         //element.style.left = Math.pow(progress/100, 2) + "px";
         //element.style.left = Easing.easeOutQuad(start, 4000, 0, progress) + "px";
         //element.style.left = Easing.easeInCubic(timestamp / 1000, 0, 4000, 2) + "px";
-        element.style.left = Easing.easeOutElastic(timestamp / 1000, 0, 400, 4) + "px";
+        element.style.left = x + "px";
         if (progress < 4) {
             window.requestAnimationFrame(step);
         }
     }
 
-    window.requestAnimationFrame(step);
+
+
+    document.querySelector("#startAnimation").addEventListener("click", function(){
+        start = null;
+        window.requestAnimationFrame(step);
+    });
 </script>
 
 </body>
